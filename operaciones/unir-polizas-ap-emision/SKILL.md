@@ -85,6 +85,6 @@ python3 scripts/unir_polizas_ap.py "/ruta/a/la/carpeta" --no-delete
 - **No aparece alguna sección**: el script la omite silenciosamente y continúa.
 - **Hay más de un endoso "otros"**: se unen todos juntos en la posición 8, ordenados alfabéticamente.
 - **Archivos con nombres ambiguos**: se colocan en "OTROS" (justo antes del endoso de agravación).
-- **Ya existe un `YYYYMMDD POLIZA.pdf` del mismo día**: el script lo excluye de la entrada y lo sobreescribe al terminar.
+- **Ya existe un `YYYYMMDD POLIZA AP.pdf` del mismo día**: el script lo excluye de la entrada y lo sobreescribe al terminar.
 - **Carpeta inexistente o vacía después de descartar**: el script aborta con un mensaje claro.
 - **PDFs protegidos con contraseña**: el script reporta el archivo específico para que el usuario lo resuelva.
