@@ -1,6 +1,6 @@
 ---
 name: unir-polizas-vida-emision
-description: "Procesa una carpeta de emisión de póliza de VIDA: elimina los PDFs llamados REMISION, TARJETA DE AGENTE y FOLLETO, y une los restantes en un solo archivo siguiendo el orden oficial de emisión de vida — CARTA DE BIENVENIDA, CARATULA, TABLAS DE SUMA ASEGURADA Y VALORES GARANTIZADOS, TABLA DE PAGO DE PRIMAS, CONDICIONES GENERALES, BIT, BAIT/BITAE, BMA, BAM, AV, otros endosos, más la sección AVE si aplica y cualquier endoso suelto al final. El PDF final se guarda en la misma carpeta como AAMMDD POLIZA.pdf (año de DOS dígitos). Usa esta habilidad siempre que el usuario pida unir una póliza de vida, unir una emisión de vida, procesar la carpeta de emisión de vida, juntar CARTA DE BIENVENIDA + CARATULA + CONDICIONES + BIT/BAIT/BMA/BAM/AV, o mencione archivos tipo VI0002985084 con CARATULA IMAGINA SER, BIT, BAIT, BMA, BAM, AV, ENDOSO DE DISTRIBUCION, etc. Actívala también cuando pida borrar REMISION / TARJETA DE AGENTE / FOLLETO de una carpeta de vida y luego unir el resto en un PDF con fecha."
+description: "Procesa una carpeta de emisión de póliza de VIDA: elimina los PDFs llamados REMISION, TARJETA DE AGENTE y FOLLETO, y une los restantes en un solo archivo siguiendo el orden oficial de emisión de vida — CARTA DE BIENVENIDA, CARATULA, TABLAS DE SUMA ASEGURADA Y VALORES GARANTIZADOS, TABLA DE PAGO DE PRIMAS, CONDICIONES GENERALES, BIT, BAIT/BITAE, BMA, BAM, AV, otros endosos, más la sección AVE si aplica y cualquier endoso suelto al final. El PDF final se guarda en la misma carpeta como AAAAMMDD POLIZA.pdf (año de CUATRO dígitos). Usa esta habilidad siempre que el usuario pida unir una póliza de vida, unir una emisión de vida, procesar la carpeta de emisión de vida, juntar CARTA DE BIENVENIDA + CARATULA + CONDICIONES + BIT/BAIT/BMA/BAM/AV, o mencione archivos tipo VI0002985084 con CARATULA IMAGINA SER, BIT, BAIT, BMA, BAM, AV, ENDOSO DE DISTRIBUCION, etc. Actívala también cuando pida borrar REMISION / TARJETA DE AGENTE / FOLLETO de una carpeta de vida y luego unir el resto en un PDF con fecha."
 ---
 
 # Unir Pólizas Vida Emisión
@@ -58,13 +58,15 @@ Cualquier PDF que no encaje en ninguna categoría explícita (por ejemplo `ENDOS
 
 ## Nombre del archivo de salida
 
-Formato exacto: `AAMMDD POLIZA.pdf`
+Formato exacto: `AAAAMMDD POLIZA.pdf`
 
-- `AAMMDD` es la fecha actual con **año de dos dígitos** (YY) + mes (2 dígitos) + día (2 dígitos). **Esto es distinto a la póliza AP, que usa año de 4 dígitos.** Si el usuario pide explícitamente 4 dígitos, usa el flag `--year4`.
+- `AAAAMMDD` es la fecha actual con **año de cuatro dígitos** (YYYY) + mes (2 dígitos) + día (2 dígitos). Ahora es igual al formato de las pólizas AP y GMM para consistencia.
 - Un espacio separa la fecha de la palabra `POLIZA`.
 - `POLIZA` va en mayúsculas, sin acento.
 
-Ejemplo: si hoy es 22 de abril de 2026, el archivo se llama `260422 POLIZA.pdf`.
+Ejemplo: si hoy es 22 de abril de 2026, el archivo se llama `20260422 POLIZA.pdf`.
+
+Si por alguna razón se necesita el formato viejo de año de dos dígitos (AAMMDD), el script acepta la bandera `--year2`.
 
 ## Ubicación del archivo de salida
 
@@ -99,7 +101,7 @@ python3 scripts/unir_polizas_vida.py "/ruta/a/la/carpeta" --no-delete
 
 1. Confirma brevemente qué se borró y el orden en que se unió el PDF (el script lo imprime).
 2. Comparte un enlace `computer://` directo al PDF final dentro de la carpeta del usuario, por ejemplo:
-   `[Ver el PDF](computer:///sessions/.../mnt/<carpeta>/260422%20POLIZA.pdf)`
+   `[Ver el PDF](computer:///sessions/.../mnt/<carpeta>/20260422%20POLIZA.pdf)`
 3. Mantén la respuesta breve — el usuario puede abrir el archivo para revisarlo. No describas en prosa lo que ya se ve en el documento.
 
 ## Casos especiales
@@ -108,7 +110,7 @@ python3 scripts/unir_polizas_vida.py "/ruta/a/la/carpeta" --no-delete
 - **Tablas duplicadas**: "TABLA DE VALOR EN EFECTIVO" y "TABLA DE COSTOS DE SEGURO" se unen ambas en la posición 3 (TABLA DE SUMA ASEGURADA Y VALORES GARANTIZADOS). Si hay una sola tabla, también queda ahí.
 - **Sección AVE ausente**: si no hay PDFs de AVE, simplemente se salta y se sigue con los documentos "otros".
 - **ENDOSO DE DISTRIBUCION u otros endosos sueltos**: si no encajan en ninguna categoría explícita se agrupan al final del documento. Revisa el orden impreso por el script y avísale al usuario si algo quedó colocado raro.
-- **Ya existe un `AAMMDD POLIZA.pdf` del mismo día en la carpeta**: el script lo excluye de la entrada para no auto-incluirse y lo sobreescribe al terminar.
+- **Ya existe un `AAAAMMDD POLIZA.pdf` del mismo día en la carpeta** (o uno viejo en formato `AAMMDD POLIZA.pdf`): el script lo excluye de la entrada para no auto-incluirse y lo sobreescribe al terminar.
 - **Carpeta inexistente o vacía después de descartar**: el script aborta con un mensaje claro.
 - **PDFs protegidos con contraseña**: `pypdf` lanzará un error; el script reporta el archivo específico para que el usuario lo resuelva.
 
